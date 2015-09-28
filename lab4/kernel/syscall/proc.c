@@ -1,0 +1,91 @@
+/** @file proc.c
+ * 
+ * @brief Implementation of `process' syscalls
+ *
+ * Author: Hailun Zhu <hailunz@andrew.cmu.edu>
+ *	   Xinkai Wang <xinkaiw@andrew.cmu.edu>
+ * Date 11/23/2014
+ */
+
+#include <exports.h>
+#include <bits/errno.h>
+#include <config.h>
+#include <kernel.h>
+#include <syscall.h>
+#include <sched.h>
+#include <exports.h>
+#include <lock.h>
+
+#include <arm/reg.h>
+#include <arm/psr.h>
+#include <arm/exception.h>
+#include <arm/physmem.h>
+#include <device.h>
+
+extern tcb_t system_tcb[OS_MAX_TASKS]; /*allocate memory for system TCBs */
+
+
+/* sort the tasks by their priorities */
+void sort_tasks(task_t *tasks,size_t num_tasks){
+	task_t tmp;
+	int exchange=0;
+	size_t i,j;
+	for (j=0;j<num_tasks-1;j++){
+		exchange = 0;
+		for (i=0;i<num_tasks-1-j;i++){
+			if (tasks[i].T > tasks[i+1].T){
+				tmp=tasks[i];
+				tasks[i]=tasks[i+1];
+				tasks[i+1]=tmp;
+				exchange=1;		
+			}	
+		}
+		if (exchange == 0)
+			break;
+	}
+}
+
+
+int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
+{
+	
+	disable_interrupts();
+
+	// reserve the priority 0 task
+	if ((num_tasks > (OS_AVAIL_TASKS-1)) || (num_tasks<=0)){
+		return -EINVAL;	
+	}
+	if (valid_addr(tasks,num_tasks,USR_START_ADDR,USR_END_ADDR) == 0){
+		return -EFAULT;	
+	}
+	
+	
+	sched_init(tasks);
+	mutex_release();
+
+	sort_tasks(tasks,num_tasks);
+
+	allocate_tasks(&tasks,num_tasks);
+	dev_init();
+	dispatch_nosave();
+	return 0;		
+}
+
+int event_wait(unsigned int dev  __attribute__((unused)))
+{
+	enable_interrupts();
+	if (dev >= NUM_DEVICES){
+		return -EINVAL;	
+	}
+	dev_wait(dev);	
+	return 0;
+}
+
+/* An invalid syscall causes the kernel to exit. */
+void invalid_syscall(unsigned int call_num  __attribute__((unused)))
+{
+	printf("Kernel panic: invalid syscall -- 0x%08x\n", call_num);
+
+	disable_interrupts();
+	while(1);
+}

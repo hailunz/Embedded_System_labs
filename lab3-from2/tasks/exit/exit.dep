@@ -1,0 +1,5 @@
+/home/helenzhu/18342/lab3-from2/tasks/exit/exit.o:  \
+ /home/helenzhu/18342/lab3-from2/tasks/exit/exit.S \
+  /home/helenzhu/18342/lab3-from2/tasks/libc/include/bits/swi.h
+
+/home/helenzhu/18342/lab3-from2/tasks/libc/include/bits/swi.h:

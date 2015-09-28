@@ -1,0 +1,69 @@
+/* 
+ * 18342 lab1-part2 
+ * Hailun Zhu
+ * ID: hailunz
+ */
+
+1.part2asm-strTable.s
+
+1)reduced mov instruction by directly use r0~r3.
+2)
+	subs	r4, r3, #1  	@ replaced 2 instruction sub and cmp instruction to subs
+	blt	.L11
+.L9:
+	ldrb	r5, [r1], #1	@ zero_extendqisi2
+	sub	ip, r5, #23
+	cmp	ip, #22
+3)use loop unrolling to reduce the loops, so that reduce the time bgt runs.
+cmp ip with 22, sub if greater than.
+.L7:
+	subgt	ip, ip, #23
+	cmp	ip, #22
+	subgt	ip, ip, #23
+	cmp	ip, #22
+	bgt	.L7
+4)
+.L13:
+	cmp	ip, r2
+	strleb	r5, [r0, ip] @ reduce the cmp instruction, because if the chars are the same, str will not change the result.
+
+.L4:
+	subs	r4, r4, #1	@ replaced 2 instruction with subs
+	bge	.L9
+
+2.part2c-part2c.c
+1) best version
+use ^ and loop unrolling to reduce the loops, only need O(n) time. 
+reduce 2 variables, result and foundInner.
+
+int oddball(int *arr, int len) {
+	/* Put your code here */
+	int i,j;
+	j=0;
+	for (i=0;i<len-4;i+=4){
+		j=j^arr[i]^arr[i+1]^arr[i+2]^arr[i+3];	
+	}
+	// finish the remained items.
+	for (;i<len;i++){
+		j=j^arr[i];
+	}
+	return j;
+}
+
+2) version 2
+/*
+ * version 2
+ * a^a=0, a^0=a, so use ^ to find the odd one.
+ */
+
+Only use ^ to reduce loops and extra memory usage.
+int oddball(int *arr, int len) {
+	/* Put your code here */
+	int i,j;
+	j=0;
+	for (i=0;i<len;i++){
+		j=j^arr[i];	
+	}
+	return j;
+}
+

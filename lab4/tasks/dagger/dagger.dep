@@ -1,0 +1,26 @@
+/home/helenzhu/lab4_3/tasks/dagger/dagger.o:  \
+ /home/helenzhu/lab4_3/tasks/dagger/dagger.c \
+  /home/helenzhu/lab4_3/tasks/libc/include/stdio.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/stdarg.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/sys/types.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/bits/types.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/task.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/unistd.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/bits/fileno.h \
+  /home/helenzhu/lab4_3/tasks/libc/include/lock.h
+
+/home/helenzhu/lab4_3/tasks/libc/include/stdio.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/stdarg.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/sys/types.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/bits/types.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/task.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/unistd.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/bits/fileno.h:
+
+/home/helenzhu/lab4_3/tasks/libc/include/lock.h:
